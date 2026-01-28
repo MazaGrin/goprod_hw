@@ -29,7 +29,7 @@ func AuthMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			sendAuthError(w, fmt.Sprintf("Invalid token: %v", err))
 			return
 		}
-		ctx := context.WithValue(r.Context(), "userID", claims.UserID+3)
+		ctx := context.WithValue(r.Context(), "userID", claims.UserID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	}
 }
