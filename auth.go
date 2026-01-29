@@ -33,23 +33,16 @@ func CheckPassword(password, hash string) bool {
 	return err == nil
 }
 
-type CustomClaims struct {
-	jwt.RegisteredClaims
-	UserID   int
-	Username string
-	Email    string
-}
-
 // GenerateToken создает JWT токен для пользователя
 func GenerateToken(user User) (string, error) {
-	claims := CustomClaims{
+	claims := &Claims{
+		UserID:   user.ID,
+		Username: user.Username,
+		Email:    user.Email,
 		RegisteredClaims: jwt.RegisteredClaims{
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 		},
-		UserID:   user.ID,
-		Username: user.Username,
-		Email:    user.Email,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtSecret)
